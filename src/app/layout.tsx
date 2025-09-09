@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex-center h-[100dvh] w-[100vw] bg-neutral-200 text-neutral-800">{children}</body>
+      <body className="flex-center h-[100dvh] w-[100vw] bg-neutral-300 text-neutral-800">{children}</body>
     </html>
   );
 }

@@ -1,12 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Search, LoaderCircle, Settings } from 'lucide-react';
 
 import FilterTag from '@/components/FilterTag';
-import { FILTER_DATA, FILTER_TABS, textSizeMap } from '../utils/constants';
-import { cn } from '@/utils/utils';
+import { FILTER_DATA, FILTER_TABS, LinkTabData, textSizeMap } from '../utils/constants';
+import { cn, fetchSearchResults } from '@/utils/utils';
 import Toggle from '@/components/Toggle';
 import LinkTab from '@/components/LinkTab';
 
@@ -16,7 +16,8 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [filters, setFilters] = useState<Set<number>>(() => new Set([0, 1, 2]));
-  const filterRef = useRef<HTMLDivElement | null>(null);
+  const [allData, setAllData] = useState<LinkTabData[]>([]);
+  const [results, setResults] = useState<LinkTabData[]>([]);
 
   const [files, setFiles] = useState<boolean>(true);
   const [people, setPeople] = useState<boolean>(true);
@@ -29,15 +30,30 @@ const Page = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const keyword = formData.get(inputName);
-    console.log(keyword);
     setIsOpen(true);
     setIsLoading(true);
+    fetchSearchResults(search, 'All')
+      .then((data) => {
+        setIsLoading(false);
+        setAllData(data);
+        if (activeIndex != 0) {
+          setResults(data.filter(({ filter }) => filter == FILTER_TABS[activeIndex]));
+        } else {
+          setResults(data);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
+  useEffect(() => {
+    if (activeIndex == 0) setResults(allData);
+    else setResults(allData.filter(({ filter }) => filter == FILTER_TABS[activeIndex]));
+  }, [activeIndex]);
+
   return (
-    <motion.div className="w-[50%] max-w-[550px] min-w-[450px] overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
+    <motion.div className="w-[50%] max-w-[550px] min-w-[450px] rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
       {/* Search Input Header */}
       <motion.div className="w-full px-6 py-5">
         <div className="flex items-center justify-between text-neutral-600">
@@ -100,7 +116,15 @@ const Page = () => {
                       className={index == activeIndex ? 'font-semibold text-neutral-800' : ''}
                       key={tab}
                       name={tab}
-                      count={tab === 'All' ? 9 : tab === 'Files' ? 6 : tab === 'People' ? 2 : tab === 'Chats' ? 1 : 0}
+                      count={
+                        tab === 'All'
+                          ? allData.length
+                          : tab === 'Files'
+                            ? allData.filter(({ filter }) => filter == 'Files').length
+                            : tab === 'People'
+                              ? allData.filter(({ filter }) => filter == 'People').length
+                              : 0
+                      }
                       onClick={() => setActiveIndex(index)}
                     />
                     {index == activeIndex && (
@@ -125,7 +149,7 @@ const Page = () => {
             </div>
             <AnimatePresence mode="wait">
               {isSettingsOpen && (
-                <motion.div className="absolute top-9 right-6 flex w-2/5 flex-col content-between gap-3 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400">
+                <motion.div className="absolute top-9 right-6 z-10 flex w-2/5 flex-col content-between gap-3 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400">
                   {FILTER_TABS.map((tab, index) => {
                     if (index == 0) return;
                     return (
@@ -173,12 +197,13 @@ const Page = () => {
 
           {/* results */}
           <div className="scroll-none max-h-[400px] w-full overflow-auto">
-            {FILTER_DATA.map((data, index) => (
+            {results.map((data, index) => (
               <motion.div key={index} className="px-6">
                 <LinkTab
-                  key={index}
+                  keyword={search}
+                  key={data.id}
                   {...data}
-                  className={index !== FILTER_DATA.length - 1 ? 'border-b border-neutral-200' : ''}
+                  className={index !== results.length - 1 ? 'border-b border-neutral-200' : ''}
                 />
               </motion.div>
             ))}

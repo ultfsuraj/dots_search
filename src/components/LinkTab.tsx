@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export type LinkTabData = {
+  keyword?: string;
   filter: 'Files' | 'People' | 'Chats' | 'Lists';
   heading: string;
   subheading: string[];
@@ -16,6 +17,7 @@ export type LinkTabData = {
 };
 
 const LinkTab = ({
+  keyword = '***',
   filter,
   heading,
   subheading,
@@ -62,7 +64,11 @@ const LinkTab = ({
           <span
             className={cn('text-sm font-medium text-neutral-800', !heading ? 'h-2 w-28 rounded-sm bg-neutral-100' : '')}
           >
-            {heading || ''}
+            {heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
+              <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
+                {text}
+              </span>
+            ))}
           </span>
           <span
             className={cn('text-xs text-neutral-400', !subheading?.length ? 'h-2 w-50 rounded-sm bg-neutral-100' : '')}

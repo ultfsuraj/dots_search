@@ -43,7 +43,7 @@ const FilterTag = ({
         if (onClick) onClick();
       }}
     >
-      {name == FILTER_TABS[1] && <Paperclip size={textSizeMap[iconSize]} />}
+      {name == FILTER_TABS[1] && <Paperclip size={textSizeMap[iconSize]} style={{ transform: 'rotate(180deg)' }} />}
       {name == FILTER_TABS[2] && <User size={textSizeMap[iconSize]} />}
       {name == FILTER_TABS[3] && <MessageCircle size={textSizeMap[iconSize]} />}
       {name == FILTER_TABS[4] && <AlignJustify size={textSizeMap[iconSize]} />}

@@ -5,9 +5,10 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Search, LoaderCircle, Settings } from 'lucide-react';
 
 import FilterTag from '@/components/FilterTag';
-import { FILTER_TABS, textSizeMap } from '../utils/constants';
+import { FILTER_DATA, FILTER_TABS, textSizeMap } from '../utils/constants';
 import { cn } from '@/utils/utils';
 import Toggle from '@/components/Toggle';
+import LinkTab from '@/components/LinkTab';
 
 const Page = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -36,7 +37,7 @@ const Page = () => {
   };
 
   return (
-    <motion.div className="w-[50%] max-w-[550px] min-w-[450px] rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
+    <motion.div className="w-[50%] max-w-[550px] min-w-[450px] overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
       {/* Search Input Header */}
       <motion.div className="w-full px-6 py-5">
         <div className="flex items-center justify-between text-neutral-600">
@@ -90,7 +91,7 @@ const Page = () => {
                 return (
                   <motion.div
                     key={tab}
-                    className="relative text-sm"
+                    className="relative text-sm font-semibold"
                     initial={{ opacity: 0.2 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -171,7 +172,17 @@ const Page = () => {
           </motion.div>
 
           {/* results */}
-          <div className="h-40 w-full"></div>
+          <div className="scroll-none max-h-[400px] w-full overflow-auto">
+            {FILTER_DATA.map((data, index) => (
+              <motion.div key={index} className="px-6">
+                <LinkTab
+                  key={index}
+                  {...data}
+                  className={index !== FILTER_DATA.length - 1 ? 'border-b border-neutral-200' : ''}
+                />
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       )}
     </motion.div>

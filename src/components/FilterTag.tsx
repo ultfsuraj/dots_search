@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, motionValue } from 'motion/react';
+import { motion } from 'motion/react';
 import { Paperclip, User, MessageCircle, AlignJustify } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { animate } from 'motion';

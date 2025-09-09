@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export type LinkTabData = {
   keyword?: string;
-  filter: 'Files' | 'People' | 'Chats' | 'Lists';
+  filter: 'Files' | 'People' | 'Chats' | 'Lists' | 'All';
   heading: string;
   subheading: string[];
   href: string;
@@ -91,7 +91,7 @@ const LinkTab = ({
           </span>
         </div>
       </div>
-      {filter && (
+      {heading && (
         <div className="relative flex items-center gap-3 font-semibold">
           <Link
             onClick={() => {

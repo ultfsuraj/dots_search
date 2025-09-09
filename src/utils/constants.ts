@@ -20,7 +20,7 @@ export const FILTER_TABS: Array<'All' | 'Files' | 'People' | 'Chats' | 'Lists'> 
 
 export type LinkTabData = {
   id: number;
-  filter: 'Files' | 'People' | 'Chats' | 'Lists';
+  filter: 'Files' | 'People' | 'Chats' | 'Lists' | 'All';
   heading: string;
   subheading: string[];
   href: string;

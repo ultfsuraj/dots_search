@@ -22,32 +22,32 @@ const FilterTag = ({
 }) => {
   const countRef = useRef<HTMLSpanElement | null>(null);
 
-  useEffect(() => {
-    if (count > 0) {
-      animate(0, count, {
-        duration: 0.5,
-        ease: 'easeOut',
-        onUpdate: (latest) => {
-          if (countRef.current) {
-            countRef.current.innerHTML = '' + Math.round(latest);
-          }
-        },
-      });
-    }
-  }, []);
-
   return (
     <div
-      className={cn('flex items-center', className)}
+      className={cn('flex min-w-[60px] items-center', className)}
       onClick={() => {
-        if (onClick) onClick();
+        if (onClick) {
+          onClick();
+          if (count > 0) {
+            animate(0, count, {
+              duration: 0.5,
+              delay: 0.3,
+              ease: 'easeOut',
+              onUpdate: (latest) => {
+                if (countRef.current) {
+                  countRef.current.innerHTML = '' + Math.round(latest);
+                }
+              },
+            });
+          }
+        }
       }}
     >
       {name == FILTER_TABS[1] && <Paperclip size={textSizeMap[iconSize]} style={{ transform: 'rotate(180deg)' }} />}
       {name == FILTER_TABS[2] && <User size={textSizeMap[iconSize]} />}
       {name == FILTER_TABS[3] && <MessageCircle size={textSizeMap[iconSize]} />}
       {name == FILTER_TABS[4] && <AlignJustify size={textSizeMap[iconSize]} />}
-      <span className="px-1">{name}</span>
+      <span className="p-1">{name}</span>
       {count >= 0 && (
         <motion.span ref={countRef} className="rounded-md bg-neutral-100 px-1.5">
           {count}

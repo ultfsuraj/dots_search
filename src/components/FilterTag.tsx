@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { Paperclip, User, MessageCircle, AlignJustify } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { animate } from 'motion';
 import { cn } from '@/utils/utils';
 import { FILTER_TABS, textSizeMap } from '@/utils/constants';
@@ -31,7 +31,7 @@ const FilterTag = ({
           if (count > 0) {
             animate(0, count, {
               duration: 0.5,
-              delay: 0.3,
+              delay: 0.2,
               ease: 'easeOut',
               onUpdate: (latest) => {
                 if (countRef.current) {

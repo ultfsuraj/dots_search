@@ -114,7 +114,7 @@ const LinkTab = ({
             <span> Link copied! </span>
           </p>
           <a
-            className="flex items-center gap-1 text-xs text-neutral-400"
+            className="flex cursor-none items-center gap-1 text-xs text-neutral-400"
             href={icon || href}
             target="_blank"
             rel="noreferrer"

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
+import { AnimatePresence, LayoutGroup, motion, useAnimation } from 'motion/react';
 import { Search, LoaderCircle, Settings } from 'lucide-react';
 
 import FilterTag from '@/components/FilterTag';
@@ -21,6 +21,10 @@ const Page = () => {
 
   const inputName = 'searchInput';
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+
+  const cursorControl = useAnimation();
 
   const getEmptyResults = (start: number, n: number) => {
     const results: LinkTabData[] = [];
@@ -89,8 +93,34 @@ const Page = () => {
     }
   }, [isOpen]);
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    cursorControl.start({
+      x:
+        e.clientX -
+        (containerRef.current?.getBoundingClientRect().left || 0) -
+        (cursorRef.current?.offsetWidth || 24) / 2,
+      y:
+        e.clientY -
+        (containerRef.current?.getBoundingClientRect().top || 0) -
+        (cursorRef.current?.offsetWidth || 24) / 2,
+      transition: { delay: 0, duration: 0 },
+    });
+  };
+
   return (
-    <motion.div className="w-[60%] max-w-[750px] min-w-[550px] rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
+    <motion.div
+      ref={containerRef}
+      className="relative w-[60%] max-w-[750px] min-w-[550px] cursor-none overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500"
+      onMouseMove={(e) => {
+        handleMouseMove(e);
+      }}
+    >
+      <motion.div
+        ref={cursorRef}
+        animate={cursorControl}
+        className="pointer-events-none absolute top-0 left-0 z-20 h-6 w-6 rounded-full border border-neutral-800 bg-neutral-600 opacity-20"
+      />
+
       {/* Search Input Header */}
       <motion.div className="w-full px-6 py-5">
         <div className="flex items-center justify-between text-neutral-600">
@@ -105,7 +135,7 @@ const Page = () => {
           <form className="grow" onSubmit={handleSubmit}>
             <input
               ref={inputRef}
-              className="w-full border-none px-2 text-xl font-semibold outline-none"
+              className="w-full cursor-none border-none px-2 text-xl font-semibold outline-none"
               type="text"
               placeholder="Searching is easier"
               name={inputName}

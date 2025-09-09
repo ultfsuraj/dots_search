@@ -4,10 +4,6 @@
   @apply flex items-center justify-center;
 }
 
-* {
-  font-family: system-ui, sans-serif;
-}
-
 .scroll-none {
   -ms-overflow-style: none;
   scrollbar-width: none;

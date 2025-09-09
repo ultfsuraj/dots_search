@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Search, LoaderCircle, Settings } from 'lucide-react';
 
 import FilterTag from '@/components/FilterTag';
-import { FILTER_DATA, FILTER_TABS, LinkTabData, textSizeMap } from '../utils/constants';
+import { FILTER_TABS, LinkTabData, textSizeMap } from '../utils/constants';
 import { cn, fetchSearchResults } from '@/utils/utils';
 import Toggle from '@/components/Toggle';
 import LinkTab from '@/components/LinkTab';
@@ -18,11 +18,6 @@ const Page = () => {
   const [filters, setFilters] = useState<Set<number>>(() => new Set([0, 1, 2]));
   const [allData, setAllData] = useState<LinkTabData[]>([]);
   const [results, setResults] = useState<LinkTabData[]>([]);
-
-  const [files, setFiles] = useState<boolean>(true);
-  const [people, setPeople] = useState<boolean>(true);
-  const [chats, setChats] = useState<boolean>(false);
-  const [lists, setLists] = useState<boolean>(false);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
@@ -53,7 +48,7 @@ const Page = () => {
   }, [activeIndex]);
 
   return (
-    <motion.div className="w-[50%] max-w-[550px] min-w-[450px] rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
+    <motion.div className="w-[60%] max-w-[750px] min-w-[550px] rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500">
       {/* Search Input Header */}
       <motion.div className="w-full px-6 py-5">
         <div className="flex items-center justify-between text-neutral-600">
@@ -96,120 +91,122 @@ const Page = () => {
         </div>
       </motion.div>
 
-      {isOpen && (
-        <motion.div>
-          {/* filters */}
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div>
+            {/* filters */}
 
-          <motion.div className="relative mt-3 mb-3 flex w-full justify-between border-b-2 border-neutral-200 px-6 pb-2 text-neutral-500 select-none">
-            <div className="flex-center gap-4">
-              {FILTER_TABS.map((tab, index) => {
-                if (!filters.has(index)) return null;
-                return (
-                  <motion.div
-                    key={tab}
-                    className="relative text-sm font-semibold"
-                    initial={{ opacity: 0.2 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    <FilterTag
-                      className={index == activeIndex ? 'font-semibold text-neutral-800' : ''}
+            <motion.div className="relative mt-3 mb-3 flex w-full justify-between border-b-2 border-neutral-200 px-6 pb-2 text-neutral-500 select-none">
+              <div className="flex-center gap-4">
+                {FILTER_TABS.map((tab, index) => {
+                  if (!filters.has(index)) return null;
+                  return (
+                    <motion.div
                       key={tab}
-                      name={tab}
-                      count={
-                        tab === 'All'
-                          ? allData.length
-                          : tab === 'Files'
-                            ? allData.filter(({ filter }) => filter == 'Files').length
-                            : tab === 'People'
-                              ? allData.filter(({ filter }) => filter == 'People').length
-                              : 0
-                      }
-                      onClick={() => setActiveIndex(index)}
-                    />
-                    {index == activeIndex && (
-                      <motion.div
-                        layout
-                        layoutId="underline"
-                        className="absolute right-0 -bottom-2.5 left-0 h-0.5 bg-neutral-800"
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
-                      />
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-            <div className="flex-center aspect-square">
-              <motion.div
-                animate={{ rotate: isSettingsOpen ? 45 : 0 }}
-                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              >
-                <Settings size={textSizeMap['text-xl']} />
-              </motion.div>
-            </div>
-            <AnimatePresence mode="wait">
-              {isSettingsOpen && (
-                <motion.div className="absolute top-9 right-6 z-10 flex w-2/5 flex-col content-between gap-3 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400">
-                  {FILTER_TABS.map((tab, index) => {
-                    if (index == 0) return;
-                    return (
-                      <motion.div
+                      className="relative text-sm font-semibold"
+                      initial={{ opacity: 0.2 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                    >
+                      <FilterTag
+                        className={index == activeIndex ? 'font-semibold text-neutral-800' : ''}
                         key={tab}
-                        className="flex items-center justify-between"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{
-                          delay: (index * 0.1) / FILTER_TABS.length,
-                          duration: 0.1 / FILTER_TABS.length,
-                          ease: 'easeOut',
-                        }}
-                        exit={{
-                          opacity: 0,
-                          height: 0,
-                          transition: {
-                            delay: ((FILTER_TABS.length - index) * 0.1) / FILTER_TABS.length,
+                        name={tab}
+                        count={
+                          tab === 'All'
+                            ? allData.length
+                            : tab === 'Files'
+                              ? allData.filter(({ filter }) => filter == 'Files').length
+                              : tab === 'People'
+                                ? allData.filter(({ filter }) => filter == 'People').length
+                                : 0
+                        }
+                        onClick={() => setActiveIndex(index)}
+                      />
+                      {index == activeIndex && (
+                        <motion.div
+                          layout
+                          layoutId="underline"
+                          className="absolute right-0 -bottom-2.5 left-0 h-0.5 bg-neutral-800"
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                        />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+              <div className="flex-center aspect-square">
+                <motion.div
+                  animate={{ rotate: isSettingsOpen ? 45 : 0 }}
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                >
+                  <Settings size={textSizeMap['text-xl']} />
+                </motion.div>
+              </div>
+              <AnimatePresence mode="wait">
+                {isSettingsOpen && (
+                  <motion.div className="absolute top-9 right-6 z-10 flex w-2/5 flex-col content-between gap-3 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400">
+                    {FILTER_TABS.map((tab, index) => {
+                      if (index == 0) return;
+                      return (
+                        <motion.div
+                          key={tab}
+                          className="flex items-center justify-between"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          transition={{
+                            delay: (index * 0.1) / FILTER_TABS.length,
                             duration: 0.1 / FILTER_TABS.length,
                             ease: 'easeOut',
-                          },
-                        }}
-                      >
-                        <FilterTag name={tab} count={-1} className={filters.has(index) ? 'text-neutral-800' : ''} />
-                        <Toggle
-                          isActive={filters.has(index)}
-                          index={index}
-                          onClick={(index: number, isOn: boolean) => {
-                            const newFilters = new Set(filters);
-                            if (isOn) {
-                              newFilters.add(index);
-                            } else {
-                              newFilters.delete(index);
-                            }
-                            setFilters(newFilters);
                           }}
-                        />
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                          exit={{
+                            opacity: 0,
+                            height: 0,
+                            transition: {
+                              delay: ((FILTER_TABS.length - index) * 0.1) / FILTER_TABS.length,
+                              duration: 0.1 / FILTER_TABS.length,
+                              ease: 'easeOut',
+                            },
+                          }}
+                        >
+                          <FilterTag name={tab} count={-1} className={filters.has(index) ? 'text-neutral-800' : ''} />
+                          <Toggle
+                            isActive={filters.has(index)}
+                            index={index}
+                            onClick={(index: number, isOn: boolean) => {
+                              const newFilters = new Set(filters);
+                              if (isOn) {
+                                newFilters.add(index);
+                              } else {
+                                newFilters.delete(index);
+                              }
+                              setFilters(newFilters);
+                            }}
+                          />
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
-          {/* results */}
-          <div className="scroll-none max-h-[400px] w-full overflow-auto">
-            {results.map((data, index) => (
-              <motion.div key={index} className="px-6">
-                <LinkTab
-                  keyword={search}
-                  key={data.id}
-                  {...data}
-                  className={index !== results.length - 1 ? 'border-b border-neutral-200' : ''}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
+            {/* results */}
+            <div className="scroll-none max-h-[400px] w-full overflow-auto">
+              {results.map((data, index) => (
+                <motion.div key={index} className="px-6">
+                  <LinkTab
+                    keyword={search}
+                    key={data.id}
+                    {...data}
+                    className={index !== results.length - 1 ? 'border-b border-neutral-200' : ''}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

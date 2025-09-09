@@ -76,6 +76,8 @@ const Page = () => {
               onClick={() => {
                 setSearch('');
                 setIsOpen(false);
+                setResults([]);
+                setAllData([]);
               }}
             >
               Clear
@@ -93,7 +95,7 @@ const Page = () => {
 
       <AnimatePresence mode="wait">
         {isOpen && (
-          <motion.div>
+          <motion.div className="select-none">
             {/* filters */}
 
             <motion.div className="relative mt-3 mb-3 flex w-full justify-between border-b-2 border-neutral-200 px-6 pb-2 text-neutral-500 select-none">
@@ -193,16 +195,20 @@ const Page = () => {
 
             {/* results */}
             <div className="scroll-none max-h-[400px] w-full overflow-auto">
-              {results.map((data, index) => (
-                <motion.div key={index} className="px-6">
-                  <LinkTab
-                    keyword={search}
-                    key={data.id}
-                    {...data}
-                    className={index !== results.length - 1 ? 'border-b border-neutral-200' : ''}
-                  />
-                </motion.div>
-              ))}
+              <AnimatePresence mode="wait">
+                {results.map((data, index) => {
+                  return (
+                    <motion.div key={index} className="px-6">
+                      <LinkTab
+                        keyword={search}
+                        key={data.id}
+                        {...data}
+                        className={index !== results.length - 1 ? 'border-b border-neutral-200' : ''}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
             </div>
           </motion.div>
         )}

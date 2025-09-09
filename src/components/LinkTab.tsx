@@ -31,7 +31,7 @@ const LinkTab = ({
   return (
     <div className={cn('flex w-full items-center justify-between py-3', className)}>
       <div className="flex items-center gap-3">
-        <div className={cn('aspect-square w-10 rounded-md', !icon ? 'bg-neutral-100' : '')}>
+        <div className={cn('relative aspect-square w-10 rounded-md', !icon ? 'bg-neutral-100' : '')}>
           {icon?.includes('http') ? (
             <Image
               height={30}
@@ -58,7 +58,14 @@ const LinkTab = ({
             </div>
           ) : null}
 
-          {status && <div />}
+          {status && (
+            <div
+              className={cn(
+                'absolute right-0 bottom-0 h-2 w-2 rounded-full bg-black outline-2 outline-white',
+                status == 'active' ? 'bg-green-600' : status == 'warning' ? 'bg-amber-600' : 'bg-red-600'
+              )}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-0.5 font-semibold">
           <span
@@ -99,7 +106,7 @@ const LinkTab = ({
           />
           <p
             className={cn(
-              'absolute bottom-7 -left-8 flex items-center gap-0.5 rounded-sm bg-black px-1 py-0.5 text-[0.7rem] text-neutral-100',
+              'absolute bottom-5 -left-8 z-10 flex items-center gap-0.5 rounded-sm bg-black px-1 py-0.5 text-[0.7rem] text-neutral-100',
               copied ? 'flex' : 'hidden'
             )}
           >

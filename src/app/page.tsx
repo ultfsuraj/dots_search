@@ -97,12 +97,14 @@ const Page = () => {
     cursorControl.start({
       x:
         e.clientX -
-        (containerRef.current?.getBoundingClientRect().left || 0) -
-        (cursorRef.current?.offsetWidth || 24) / 2,
+        (containerRef.current?.getBoundingClientRect().left || 0) +
+        (cursorRef.current?.offsetWidth || 24) / 2 +
+        1,
       y:
         e.clientY -
-        (containerRef.current?.getBoundingClientRect().top || 0) -
-        (cursorRef.current?.offsetWidth || 24) / 2,
+        (containerRef.current?.getBoundingClientRect().top || 0) +
+        (cursorRef.current?.offsetWidth || 24) / 2 +
+        1,
       transition: { delay: 0, duration: 0 },
     });
   };
@@ -110,7 +112,7 @@ const Page = () => {
   return (
     <motion.div
       ref={containerRef}
-      className="relative w-[60%] max-w-[750px] min-w-[550px] cursor-none overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500"
+      className="relative w-[60%] max-w-[750px] min-w-[550px] overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500"
       onMouseMove={(e) => {
         handleMouseMove(e);
       }}
@@ -118,7 +120,7 @@ const Page = () => {
       <motion.div
         ref={cursorRef}
         animate={cursorControl}
-        className="pointer-events-none absolute top-0 left-0 z-20 h-6 w-6 rounded-full border border-neutral-800 bg-neutral-600 opacity-20"
+        className="pointer-events-none absolute -top-6 -left-6 z-20 h-6 w-6 rounded-full border border-neutral-800 bg-neutral-600 opacity-20"
       />
 
       {/* Search Input Header */}
@@ -141,19 +143,29 @@ const Page = () => {
               name={inputName}
             />
           </form>
+
           {isOpen ? (
             <motion.span
+              layout
               className="text-sm font-semibold underline underline-offset-2"
               onClick={() => {
                 if (inputRef.current) inputRef.current.value = '';
                 setIsOpen(false);
                 setIsSettingsOpen(false);
               }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
             >
               Clear
             </motion.span>
           ) : (
-            <motion.div className="text-sm text-neutral-500">
+            <motion.div
+              className="text-sm text-neutral-500"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
               <span className="content-baseline rounded-lg border border-neutral-400 px-1.5 pt-0.5 pb-1 text-xs">
                 S
               </span>
@@ -166,7 +178,7 @@ const Page = () => {
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            className="overflow-hidden select-none"
+            className="relative overflow-hidden select-none"
             exit={{ height: 0, transition: { duration: 0.5, delay: 0.3, ease: 'easeOut' } }}
           >
             <LayoutGroup id="filters">

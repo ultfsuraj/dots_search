@@ -118,7 +118,7 @@ const Page = () => {
   return (
     <motion.div
       ref={containerRef}
-      className="relative w-[60%] max-w-[750px] min-w-[550px] overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500"
+      className="relative w-[60%] max-w-[750px] min-w-[550px] cursor-none overflow-hidden rounded-2xl bg-white drop-shadow-xl drop-shadow-neutral-500"
       onMouseMove={(e) => {
         handleMouseMove(e);
       }}

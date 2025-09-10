@@ -2,7 +2,7 @@
 
 ### [Live Link](https://dots-search.vercel.app/)
 
-#### Click on the Link above search for 'li'
+#### Open in Desktop, Click on the Link above search for 'li'
 
 1. switch tabs
 2. click on settings

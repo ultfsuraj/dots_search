@@ -15,7 +15,13 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [filters, setFilters] = useState<Set<number>>(() => new Set([0, 1, 2]));
-  const [results, setResults] = useState<Record<'All' | 'Files' | 'People' | 'Chats' | 'Lists', LinkTabData[]>>([]);
+  const [results, setResults] = useState<Record<'All' | 'Files' | 'People' | 'Chats' | 'Lists', LinkTabData[]>>({
+    All: [],
+    Chats: [],
+    Files: [],
+    Lists: [],
+    People: [],
+  });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 

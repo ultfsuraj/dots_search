@@ -2,7 +2,7 @@
 
 ### [Live Link](https://dots-search.vercel.app/)
 
-#### Open in Desktop, Click on the Link above search for 'li'
+#### Open in Desktop, Click on the Link above search for 'li' (20 results) or 'ee' (5 results) or empty string '' (100) results.... to check how it works on different number of results
 
 1. switch tabs
 2. click on settings

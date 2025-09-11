@@ -4,7 +4,7 @@ import { textSizeMap } from '@/utils/constants';
 import { cn } from '@/utils/utils';
 import { ClipboardMinus, Link, SquareArrowOutUpRight, Image as LucideImage, Youtube, Music, Check } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 export type LinkTabData = {
   keyword?: string;
@@ -74,11 +74,13 @@ const LinkTab = ({
               !heading ? 'mb-1 h-2 w-28 rounded-sm bg-neutral-100' : ''
             )}
           >
-            {heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
-              <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
-                {text}
-              </span>
-            ))}
+            {keyword.length == 0 && <span className="m-0 p-0">{heading}</span>}
+            {keyword.length &&
+              heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
+                <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
+                  {text}
+                </span>
+              ))}
           </span>
           <span
             className={cn('text-xs text-neutral-400', !subheading?.length ? 'h-2 w-50 rounded-sm bg-neutral-100' : '')}
@@ -131,4 +133,4 @@ const LinkTab = ({
   );
 };
 
-export default LinkTab;
+export default memo(LinkTab);

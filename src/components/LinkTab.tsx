@@ -74,13 +74,14 @@ const LinkTab = ({
               !heading ? 'mb-1 h-2 w-28 rounded-sm bg-neutral-100' : ''
             )}
           >
-            {keyword.length == 0 && <span className="m-0 p-0">{heading}</span>}
-            {keyword.length &&
-              heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
-                <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
-                  {text}
-                </span>
-              ))}
+            {!keyword.length && <span className="m-0 p-0">{heading}</span>}
+            {keyword.length && heading?.length
+              ? heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
+                  <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
+                    {text}
+                  </span>
+                ))
+              : null}
           </span>
           <span
             className={cn('text-xs text-neutral-400', !subheading?.length ? 'h-2 w-50 rounded-sm bg-neutral-100' : '')}

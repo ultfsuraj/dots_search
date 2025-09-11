@@ -24,6 +24,8 @@ const Page = () => {
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [fileCount, setFileCount] = useState<number>(0);
+  const [peopleCount, setPeopleCount] = useState<number>(0);
 
   const inputName = 'searchInput';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -73,6 +75,10 @@ const Page = () => {
           Lists: getEmptyResults(0, defaultCount),
           People: data.filter(({ filter }) => filter == 'People'),
         };
+
+        setPeopleCount(temp.People.length);
+        setFileCount(temp.Files.length);
+
         if (temp.People.length < defaultCount) {
           temp.People = [...temp.People, ...getEmptyResults(temp.People.length, defaultCount - temp.People.length)];
         }
@@ -99,6 +105,8 @@ const Page = () => {
         Lists: [],
         People: [],
       });
+      setFileCount(0);
+      setPeopleCount(0);
     }
   }, [isOpen]);
 
@@ -196,6 +204,7 @@ const Page = () => {
               <motion.div
                 layout
                 className="relative mt-3 mb-3 flex w-full justify-between border-b-2 border-neutral-200 px-6 pb-2 text-neutral-500 select-none"
+                exit={{ opacity: 0, y: 50, transition: { delay: 0.3, duration: 0.4, ease: 'easeOut' } }}
               >
                 {results && (
                   <div className="flex-center gap-4">
@@ -215,11 +224,11 @@ const Page = () => {
                             name={tab}
                             count={
                               tab === 'All'
-                                ? results.All.filter((data) => data.heading).length
+                                ? fileCount + peopleCount
                                 : tab === 'Files'
-                                  ? results.Files.filter((data) => data.heading).length
+                                  ? fileCount
                                   : tab === 'People'
-                                    ? results.People.filter((data) => data.heading).length
+                                    ? peopleCount
                                     : 0
                             }
                             onClick={() => setActiveIndex(index)}

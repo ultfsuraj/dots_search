@@ -31,7 +31,6 @@ const FilterTag = ({
           if (count > 0) {
             animate(0, count, {
               duration: 0.5,
-              delay: 0.2,
               ease: 'easeOut',
               onUpdate: (latest) => {
                 if (countRef.current) {

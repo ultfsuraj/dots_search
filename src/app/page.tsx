@@ -246,7 +246,7 @@ const Page = () => {
                   {isSettingsOpen && (
                     <motion.div
                       layout
-                      className="absolute top-9 right-6 z-10 flex w-2/5 flex-col content-between gap-3 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400"
+                      className="absolute top-10 right-6 z-10 flex w-1/3 flex-col content-between gap-1 rounded-md border border-neutral-200 bg-white px-4 py-2 drop-shadow-md drop-shadow-neutral-400"
                     >
                       {FILTER_TABS.map((tab, index) => {
                         if (index == 0) return;
@@ -255,11 +255,11 @@ const Page = () => {
                             key={tab}
                             className="flex items-center justify-between"
                             layout
-                            initial={{ opacity: 0, height: 0 }}
+                            initial={{ opacity: 0.3, height: index < 2 ? 'auto' : 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             transition={{
-                              delay: (index * 0.1) / FILTER_TABS.length,
-                              duration: 0.1 / FILTER_TABS.length,
+                              delay: index < 2 ? 0 : ((index - 2) * 0.2) / FILTER_TABS.length,
+                              duration: index < 2 ? 0.1 : 0.2 / FILTER_TABS.length,
                               ease: 'easeOut',
                             }}
                             exit={{

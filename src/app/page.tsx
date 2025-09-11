@@ -169,6 +169,7 @@ const Page = () => {
                 if (inputRef.current) inputRef.current.value = '';
                 setIsOpen(false);
                 setIsSettingsOpen(false);
+                setIsLoading(false);
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -343,6 +344,8 @@ const Page = () => {
                         className={
                           index !== results[FILTER_TABS[activeIndex]].length - 1 ? 'border-b border-neutral-200' : ''
                         }
+                        delay={index < defaultCount ? index * 0.1 : 0}
+                        isLoading={isLoading}
                       />
                     </motion.div>
                   );

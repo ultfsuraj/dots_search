@@ -31,6 +31,7 @@ const Page = () => {
   const cursorRef = useRef<HTMLDivElement | null>(null);
 
   const cursorControl = useAnimation();
+  const defaultCount = 7;
 
   const getEmptyResults = (start: number, n: number) => {
     const results: LinkTabData[] = [];
@@ -53,11 +54,11 @@ const Page = () => {
     setIsLoading(true);
 
     setResults({
-      All: getEmptyResults(0, 6),
-      Chats: getEmptyResults(0, 6),
-      Files: getEmptyResults(0, 6),
-      Lists: getEmptyResults(0, 6),
-      People: getEmptyResults(0, 6),
+      All: getEmptyResults(0, defaultCount),
+      Chats: getEmptyResults(0, defaultCount),
+      Files: getEmptyResults(0, defaultCount),
+      Lists: getEmptyResults(0, defaultCount),
+      People: getEmptyResults(0, defaultCount),
     });
 
     fetchSearchResults(inputRef.current?.value || '', FILTER_TABS[0])
@@ -65,19 +66,19 @@ const Page = () => {
         setIsLoading(false);
         const temp: typeof results = {
           All: data,
-          Chats: getEmptyResults(0, 6),
+          Chats: getEmptyResults(0, defaultCount),
           Files: data.filter(({ filter }) => filter == 'Files'),
-          Lists: getEmptyResults(0, 6),
+          Lists: getEmptyResults(0, defaultCount),
           People: data.filter(({ filter }) => filter == 'People'),
         };
-        if (temp.People.length < 6) {
-          temp.People = [...temp.People, ...getEmptyResults(temp.People.length, 6 - temp.People.length)];
+        if (temp.People.length < defaultCount) {
+          temp.People = [...temp.People, ...getEmptyResults(temp.People.length, defaultCount - temp.People.length)];
         }
-        if (temp.All.length < 6) {
-          temp.All = [...temp.All, ...getEmptyResults(temp.All.length, 6 - temp.All.length)];
+        if (temp.All.length < defaultCount) {
+          temp.All = [...temp.All, ...getEmptyResults(temp.All.length, defaultCount - temp.All.length)];
         }
-        if (temp.Files.length < 6) {
-          temp.Files = [...temp.Files, ...getEmptyResults(temp.Files.length, 6 - temp.Files.length)];
+        if (temp.Files.length < defaultCount) {
+          temp.Files = [...temp.Files, ...getEmptyResults(temp.Files.length, defaultCount - temp.Files.length)];
         }
         setResults(temp);
       })
@@ -185,7 +186,7 @@ const Page = () => {
         {isOpen && (
           <motion.div
             className="relative overflow-hidden select-none"
-            exit={{ height: 0, transition: { duration: 0.5, delay: 0.3, ease: 'easeOut' } }}
+            exit={{ height: 0, transition: { duration: 0.5, ease: 'easeOut' } }}
           >
             <LayoutGroup id="filters">
               {/* filters */}

@@ -15,7 +15,7 @@ export async function fetchSearchResults(keyword: string, type: 'All' | 'Files' 
   }
 
   await new Promise((resolve) => {
-    setTimeout(() => resolve(''), 1500);
+    setTimeout(() => resolve(''), 2500);
   });
 
   return data.filter(({ heading }) => heading.toLowerCase().includes(keyword.toLowerCase()));

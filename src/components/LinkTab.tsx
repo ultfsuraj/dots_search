@@ -4,7 +4,8 @@ import { textSizeMap } from '@/utils/constants';
 import { cn } from '@/utils/utils';
 import { ClipboardMinus, Link, SquareArrowOutUpRight, Image as LucideImage, Youtube, Music, Check } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { memo, useState } from 'react';
+import { motion } from 'motion/react';
 
 export type LinkTabData = {
   keyword?: string;
@@ -17,6 +18,8 @@ export type LinkTabData = {
 };
 
 const LinkTab = ({
+  delay = 0,
+  isLoading = false,
   keyword = '***',
   filter,
   heading,
@@ -25,13 +28,29 @@ const LinkTab = ({
   icon,
   status,
   className = '',
-}: Partial<LinkTabData> & { className?: string }) => {
+}: Partial<LinkTabData> & { className?: string; isLoading: boolean; delay: number }) => {
   const [copied, setCopied] = useState<boolean>(false);
 
   return (
-    <div className={cn('group flex w-full items-center justify-between py-3', className)}>
+    <div className={cn('group flex h-16 w-full items-center justify-between py-3', className)}>
       <div className="flex items-center gap-3">
-        <div className={cn('relative aspect-square w-10 rounded-md', !icon ? 'bg-neutral-100' : '')}>
+        <motion.div
+          className={cn(
+            'relative aspect-square w-10 rounded-md',
+            !icon ? 'bg-neutral-100' : '',
+            !isLoading && !icon ? 'opacity-45' : ''
+          )}
+          initial={{ backgroundColor: '#e5e5e5' }}
+          animate={{ backgroundColor: !isLoading ? '#e5e5e5' : '#f5f5f5' }}
+          transition={{
+            duration: 0.2,
+            ease: 'linear',
+            delay: isLoading ? delay : 0,
+            repeat: isLoading ? Infinity : 0,
+            repeatDelay: 0.4,
+            repeatType: 'reverse',
+          }}
+        >
           {icon?.includes('http') ? (
             <Image
               height={30}
@@ -66,17 +85,40 @@ const LinkTab = ({
               )}
             />
           )}
-        </div>
+        </motion.div>
         <div className="flex flex-col gap-0.5 font-semibold">
-          <span
-            className={cn('text-sm font-medium text-neutral-800', !heading ? 'h-2 w-28 rounded-sm bg-neutral-100' : '')}
-          >
-            {heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
-              <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
-                {text}
-              </span>
-            ))}
-          </span>
+          {isLoading && (
+            <motion.span
+              className="mb-1 h-2 w-28 rounded-sm bg-neutral-100 text-sm font-medium text-neutral-800"
+              initial={{ backgroundColor: '#e5e5e5' }}
+              animate={{ backgroundColor: !isLoading ? '#e5e5e5' : '#f5f5f5' }}
+              transition={{
+                duration: 0.2,
+                ease: 'linear',
+                delay: isLoading ? delay : 0,
+                repeat: isLoading ? Infinity : 0,
+                repeatDelay: 0.4,
+                repeatType: 'reverse',
+              }}
+            />
+          )}
+          {!isLoading && (
+            <span
+              className={cn(
+                'text-sm font-medium text-neutral-800',
+                !heading ? 'mb-1 h-2 w-28 rounded-sm bg-neutral-100' : ''
+              )}
+            >
+              {!keyword.length && <span className="m-0 p-0">{heading}</span>}
+              {keyword.length && heading?.length
+                ? heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
+                    <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>
+                      {text}
+                    </span>
+                  ))
+                : null}
+            </span>
+          )}
           <span
             className={cn('text-xs text-neutral-400', !subheading?.length ? 'h-2 w-50 rounded-sm bg-neutral-100' : '')}
           >
@@ -128,4 +170,4 @@ const LinkTab = ({
   );
 };
 
-export default LinkTab;
+export default memo(LinkTab);

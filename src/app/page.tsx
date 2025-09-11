@@ -24,6 +24,8 @@ const Page = () => {
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [fileCount, setFileCount] = useState<number>(0);
+  const [peopleCount, setPeopleCount] = useState<number>(0);
 
   const inputName = 'searchInput';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -31,6 +33,9 @@ const Page = () => {
   const cursorRef = useRef<HTMLDivElement | null>(null);
 
   const cursorControl = useAnimation();
+  const defaultCount = 7;
+  const slotDuration = 0.32 / (1 + defaultCount);
+  const slotDelayFactor = 0.24 / (1 + defaultCount);
 
   const getEmptyResults = (start: number, n: number) => {
     const results: LinkTabData[] = [];
@@ -53,11 +58,11 @@ const Page = () => {
     setIsLoading(true);
 
     setResults({
-      All: getEmptyResults(0, 6),
-      Chats: getEmptyResults(0, 6),
-      Files: getEmptyResults(0, 6),
-      Lists: getEmptyResults(0, 6),
-      People: getEmptyResults(0, 6),
+      All: getEmptyResults(0, defaultCount),
+      Chats: getEmptyResults(0, defaultCount),
+      Files: getEmptyResults(0, defaultCount),
+      Lists: getEmptyResults(0, defaultCount),
+      People: getEmptyResults(0, defaultCount),
     });
 
     fetchSearchResults(inputRef.current?.value || '', FILTER_TABS[0])
@@ -65,19 +70,23 @@ const Page = () => {
         setIsLoading(false);
         const temp: typeof results = {
           All: data,
-          Chats: getEmptyResults(0, 6),
+          Chats: getEmptyResults(0, defaultCount),
           Files: data.filter(({ filter }) => filter == 'Files'),
-          Lists: getEmptyResults(0, 6),
+          Lists: getEmptyResults(0, defaultCount),
           People: data.filter(({ filter }) => filter == 'People'),
         };
-        if (temp.People.length < 6) {
-          temp.People = [...temp.People, ...getEmptyResults(temp.People.length, 6 - temp.People.length)];
+
+        setPeopleCount(temp.People.length);
+        setFileCount(temp.Files.length);
+
+        if (temp.People.length < defaultCount) {
+          temp.People = [...temp.People, ...getEmptyResults(temp.People.length, defaultCount - temp.People.length)];
         }
-        if (temp.All.length < 6) {
-          temp.All = [...temp.All, ...getEmptyResults(temp.All.length, 6 - temp.All.length)];
+        if (temp.All.length < defaultCount) {
+          temp.All = [...temp.All, ...getEmptyResults(temp.All.length, defaultCount - temp.All.length)];
         }
-        if (temp.Files.length < 6) {
-          temp.Files = [...temp.Files, ...getEmptyResults(temp.Files.length, 6 - temp.Files.length)];
+        if (temp.Files.length < defaultCount) {
+          temp.Files = [...temp.Files, ...getEmptyResults(temp.Files.length, defaultCount - temp.Files.length)];
         }
         setResults(temp);
       })
@@ -96,6 +105,8 @@ const Page = () => {
         Lists: [],
         People: [],
       });
+      setFileCount(0);
+      setPeopleCount(0);
     }
   }, [isOpen]);
 
@@ -158,6 +169,7 @@ const Page = () => {
                 if (inputRef.current) inputRef.current.value = '';
                 setIsOpen(false);
                 setIsSettingsOpen(false);
+                setIsLoading(false);
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -185,7 +197,7 @@ const Page = () => {
         {isOpen && (
           <motion.div
             className="relative overflow-hidden select-none"
-            exit={{ height: 0, transition: { duration: 0.5, delay: 0.3, ease: 'easeOut' } }}
+            exit={{ height: 0, transition: { delay: 0.1, duration: 0.5, ease: 'easeOut' } }}
           >
             <LayoutGroup id="filters">
               {/* filters */}
@@ -193,6 +205,7 @@ const Page = () => {
               <motion.div
                 layout
                 className="relative mt-3 mb-3 flex w-full justify-between border-b-2 border-neutral-200 px-6 pb-2 text-neutral-500 select-none"
+                exit={{ opacity: 0, y: 50, transition: { delay: 0.3, duration: 0.4, ease: 'easeOut' } }}
               >
                 {results && (
                   <div className="flex-center gap-4">
@@ -212,11 +225,11 @@ const Page = () => {
                             name={tab}
                             count={
                               tab === 'All'
-                                ? results.All.filter((data) => data.heading).length
+                                ? fileCount + peopleCount
                                 : tab === 'Files'
-                                  ? results.Files.filter((data) => data.heading).length
+                                  ? fileCount
                                   : tab === 'People'
-                                    ? results.People.filter((data) => data.heading).length
+                                    ? peopleCount
                                     : 0
                             }
                             onClick={() => setActiveIndex(index)}
@@ -305,16 +318,36 @@ const Page = () => {
               >
                 {results[FILTER_TABS[activeIndex]].map((data, index) => {
                   return (
-                    <div key={index} className="px-6">
+                    <motion.div
+                      key={index + `${isLoading}`}
+                      className="px-6"
+                      initial={{ opacity: isLoading ? 1 : 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        duration: index < defaultCount ? slotDuration : 0,
+                        delay: index < defaultCount ? index * slotDelayFactor : 0,
+                        ease: 'easeOut',
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: 50,
+                        transition: {
+                          duration: 0.4,
+                          ease: 'easeOut',
+                        },
+                      }}
+                    >
                       <LinkTab
                         keyword={inputRef?.current?.value}
-                        key={data.id}
+                        key={data.id + `${isLoading}`}
                         {...data}
                         className={
                           index !== results[FILTER_TABS[activeIndex]].length - 1 ? 'border-b border-neutral-200' : ''
                         }
+                        delay={index < defaultCount ? index * 0.1 : 0}
+                        isLoading={isLoading}
                       />
-                    </div>
+                    </motion.div>
                   );
                 })}
               </motion.div>

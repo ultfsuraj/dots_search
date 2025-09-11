@@ -2,11 +2,15 @@
 
 ### [Live Link](https://dots-search.vercel.app/)
 
-#### Open in Desktop, Click on the Link above search for 'li'
+#### Open in Desktop, Click on the Link above search for 'li' (20 results) or 'ee' (5 results) or empty string '' (100) results.... to check how it works on different number of results
+
+## optimization remaining
+
+1. this works fine for around 60 results in one go. but then you will experience input delay when trying to switch tabs quickly. Carefully Implementing a virtual list for long list of scrollable results (taking results down to around 15 at a time, will result in no lag for large number of results data) along with the animations after user scroll is quite advanced, and will take considerable dev time.
 
 1. switch tabs
-2. click on settings
-3. click on clear or search something else
+1. click on settings
+1. click on clear or search something else
 
 (search for max 3 letters for better results, because dummy data isn't spreaded evenly)
 

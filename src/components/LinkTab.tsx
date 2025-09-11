@@ -29,7 +29,7 @@ const LinkTab = ({
   const [copied, setCopied] = useState<boolean>(false);
 
   return (
-    <div className={cn('group flex w-full items-center justify-between py-3', className)}>
+    <div className={cn('group flex h-16 w-full items-center justify-between py-3', className)}>
       <div className="flex items-center gap-3">
         <div className={cn('relative aspect-square w-10 rounded-md', !icon ? 'bg-neutral-100' : '')}>
           {icon?.includes('http') ? (
@@ -69,7 +69,10 @@ const LinkTab = ({
         </div>
         <div className="flex flex-col gap-0.5 font-semibold">
           <span
-            className={cn('text-sm font-medium text-neutral-800', !heading ? 'h-2 w-28 rounded-sm bg-neutral-100' : '')}
+            className={cn(
+              'text-sm font-medium text-neutral-800',
+              !heading ? 'mb-1 h-2 w-28 rounded-sm bg-neutral-100' : ''
+            )}
           >
             {heading?.split(new RegExp(`(${keyword.toLowerCase()})`, 'ig')).map((text, index) => (
               <span key={index} className={cn('m-0 p-0', text.toLowerCase() == keyword ? 'bg-amber-100' : '')}>

@@ -32,6 +32,8 @@ const Page = () => {
 
   const cursorControl = useAnimation();
   const defaultCount = 7;
+  const slotDuration = 0.32 / (1 + defaultCount);
+  const slotDelayFactor = 0.24 / (1 + defaultCount);
 
   const getEmptyResults = (start: number, n: number) => {
     const results: LinkTabData[] = [];
@@ -186,7 +188,7 @@ const Page = () => {
         {isOpen && (
           <motion.div
             className="relative overflow-hidden select-none"
-            exit={{ height: 0, transition: { duration: 0.5, ease: 'easeOut' } }}
+            exit={{ height: 0, transition: { delay: 0.1, duration: 0.5, ease: 'easeOut' } }}
           >
             <LayoutGroup id="filters">
               {/* filters */}
@@ -306,16 +308,34 @@ const Page = () => {
               >
                 {results[FILTER_TABS[activeIndex]].map((data, index) => {
                   return (
-                    <div key={index} className="px-6">
+                    <motion.div
+                      key={index + `${isLoading}`}
+                      className="px-6"
+                      initial={{ opacity: isLoading ? 1 : 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        duration: index < defaultCount ? slotDuration : 0,
+                        delay: index < defaultCount ? index * slotDelayFactor : 0,
+                        ease: 'easeOut',
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: 50,
+                        transition: {
+                          duration: 0.4,
+                          ease: 'easeOut',
+                        },
+                      }}
+                    >
                       <LinkTab
                         keyword={inputRef?.current?.value}
-                        key={data.id}
+                        key={data.id + `${isLoading}`}
                         {...data}
                         className={
                           index !== results[FILTER_TABS[activeIndex]].length - 1 ? 'border-b border-neutral-200' : ''
                         }
                       />
-                    </div>
+                    </motion.div>
                   );
                 })}
               </motion.div>

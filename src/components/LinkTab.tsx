@@ -29,7 +29,7 @@ const LinkTab = ({
   const [copied, setCopied] = useState<boolean>(false);
 
   return (
-    <div className={cn('flex w-full items-center justify-between py-3', className)}>
+    <div className={cn('group flex w-full items-center justify-between py-3', className)}>
       <div className="flex items-center gap-3">
         <div className={cn('relative aspect-square w-10 rounded-md', !icon ? 'bg-neutral-100' : '')}>
           {icon?.includes('http') ? (
@@ -92,7 +92,7 @@ const LinkTab = ({
         </div>
       </div>
       {heading && (
-        <div className="relative flex items-center gap-3 font-semibold">
+        <div className="relative hidden items-center gap-3 font-semibold group-hover:flex">
           <Link
             onClick={() => {
               setCopied(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, LayoutGroup, motion, useAnimation } from 'motion/react';
+import { AnimatePresence, LayoutGroup, motion, scale, useAnimation } from 'motion/react';
 import { Search, LoaderCircle, Settings } from 'lucide-react';
 
 import FilterTag from '@/components/FilterTag';
@@ -137,7 +137,7 @@ const Page = () => {
       <motion.div
         ref={cursorRef}
         animate={cursorControl}
-        className="pointer-events-none absolute -top-6 -left-6 z-20 h-6 w-6 rounded-full border border-neutral-800 bg-neutral-600 opacity-20"
+        className="pointer-events-none absolute -top-6 -left-6 z-20 h-6 w-6 rounded-full border-2 border-black bg-neutral-600 opacity-20"
       />
 
       {/* Search Input Header */}
@@ -320,7 +320,7 @@ const Page = () => {
                   return (
                     <motion.div
                       key={index + `${isLoading}`}
-                      className="px-6"
+                      className="px-6 hover:bg-neutral-50"
                       initial={{ opacity: isLoading ? 1 : 0 }}
                       animate={{ opacity: 1 }}
                       transition={{
